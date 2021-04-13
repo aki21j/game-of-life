@@ -15,7 +15,7 @@ import copy
 import time
 
 def dead_state(width, height):
-  return [ [0] * width ] * height
+  return [[0 for _ in range(height)] for _ in range(width)]
 
 def get_board_dimensions(board):
   width = len(board)
@@ -23,36 +23,17 @@ def get_board_dimensions(board):
   return width, height
 
 def random_state(width, height):
-  # board_state = dead_state(width, height)
+  board_state = dead_state(width, height)
 
-  # for row in range(len(board_state)):
-  #   for col in range(len(board_state[row])):
-  #     random_no = random.random()
-  #     if random_no >= 0.85:
-  #       board_state[row][col] = 1
-  #     else:
-  #       board_state[row][col] = 0
+  for row in range(len(board_state)):
+    for col in range(len(board_state[row])):
+      random_no = random.random()
+      if random_no >= 0.85:
+        board_state[row][col] = 1
+      else:
+        board_state[row][col] = 0
 
-  board_state = [[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
- [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
- [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1],
- [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
- [0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
- [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
- [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]]
+
   return board_state
 
 
@@ -84,7 +65,6 @@ def get_new_cell_value(row, col, initial_state):
 
   board_width, board_height = get_board_dimensions(initial_state)
   return_val = 0
-  # print(row, col)
   for i in range(range_start[row], range_end[row] + 1):
     if i < 0 or i >= board_width:
       continue
@@ -118,7 +98,8 @@ def next_board_state(initial_board_state):
   new_state = dead_state(board_width, board_height)
   for row in range(0,board_width):
     for col in range(0,board_height):
-      new_state[row][col] = get_new_cell_value(row, col, initial_board_state)
+      new_val = get_new_cell_value(row, col, initial_board_state)
+      new_state[row][col] = new_val
   return new_state
 
 
@@ -126,10 +107,8 @@ def main():
   board_state = random_state(20, 20)
   next_state = board_state
   i = 0
-  while i <= 1:
-    # render(next_state)
-    pprint(next_state)
-    print('------------')
+  while True:
+    render(next_state)
     next_state = next_board_state(next_state)
     time.sleep(0.03)
     i+=1
