@@ -13,6 +13,8 @@ from pprint import pprint
 import math, random
 import copy
 import time
+import sys
+import argparse
 
 def dead_state(width, height):
   return [[0 for _ in range(height)] for _ in range(width)]
@@ -104,15 +106,56 @@ def next_board_state(initial_board_state):
   return new_state
 
 
+def load_state_from_file(file_path):
+  with open(file_path, 'r') as infile:
+    lines = [l.rstrip() for l in infile.readlines()]
+  
+  output = dead_state(len(lines), len(lines[0]))
+  for i,line in enumerate(lines):
+    for j,val in enumerate(line):
+      output[i][j] = int(val)
+
+  return output
+
 def main():
-  board_state = random_state(20, 20)
+
+  parser = argparse.ArgumentParser(description="Runs Conway's Game of Life simulation.")
+
+  parser.add_argument('--grid-size', dest='N', required=False)
+  parser.add_argument('--interval', dest='interval', required=False)
+  parser.add_argument('--toad', action='store_true',required=False)
+  parser.add_argument('--blinker', action='store_true',required=False)
+  parser.add_argument('--beacon', action='store_true',required=False)
+  parser.add_argument('--glider', action='store_true',required=False)
+  ## TODO: Add gosper glider gun
+  # parser.add_argument('--gosper', required=False)
+  args = parser.parse_args()
+
+  N = 100
+  if args.N and float(args.N) > 8:
+    N = int(args.N)
+
+  update_interval = 0.05
+  if args.interval:
+    update_interval = float(args.interval)
+
+  board_state = random_state(N, N)
+
+  if args.toad:
+    board_state = load_state_from_file('./toad.txt')
+  elif args.blinker:
+    board_state = load_state_from_file('./blinker.txt')
+  elif args.beacon:
+    board_state = load_state_from_file('./beacon.txt')
+  elif args.glider:
+    board_state = load_state_from_file('./glider.txt')
+      
   next_state = board_state
-  i = 0
   while True:
     render(next_state)
     next_state = next_board_state(next_state)
-    time.sleep(0.03)
-    i+=1
+    time.sleep(update_interval)
 
 if __name__ == "__main__":
+    
   main()
