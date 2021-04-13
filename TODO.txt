@@ -1,0 +1,7 @@
+TODO: 
+  - gosper glider gun
+  - add colors
+  - Langton's ant
+  - Brians brain
+  - Day and night
+  
