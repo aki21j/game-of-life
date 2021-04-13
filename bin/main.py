@@ -44,9 +44,10 @@ def render(initial_board_state):
     1 :  u"\u2588"
   }
   board_state = copy.deepcopy(initial_board_state)
-  for row in range(len(board_state)):
+  board_width, board_height = get_board_dimensions(initial_board_state)
+  for col in range(0,board_height):
     line = ''
-    for col in range(len(board_state[row])):
+    for row in range(0,board_width):
       line += char_map[initial_board_state[row][col]] * 2
     lines.append(line)
     
